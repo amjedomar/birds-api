@@ -2,6 +2,8 @@
 
 A Public Restful API server built using Express.js and documented using Swagger, To retrieve and manipulate birds data
 
+**Live Demo at** https://birds-api.amjed.me/docs
+
 **Table of Contents**
 
 - [Run `birds-api` in your local machine](#run-birds-api-in-your-local-machine)
