@@ -1,10 +1,11 @@
 import express from 'express';
+import {BirdsController} from '../controllers/BirdsController';
 
 /**
  * @swagger
  *   tags:
  *     - name: Birds
- *       description: Operations to retrieve and manipulates birds data
+ *       description: Operations to retrieve and manipulate birds data
  */
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const router = express.Router();
  *       properties:
  *         name:
  *           type: string
- *           description: The bird's name.
+ *           description: The bird's name, its string length is > 0 AND <= 255.
  *           example: Eastern bluebird
  *         description:
  *           type: string
@@ -38,8 +39,18 @@ const router = express.Router();
  *               type: string
  *               description: The bird's Identifier
  *               example: 1
+ *             createdAt:
+ *               type: string
+ *               description: The date of the bird's creation in ISO string format
+ *               example: 2022-03-13T12:17:10.000Z
+ *             updatedAt:
+ *               type: string
+ *               description: The date of the last update operation to the bird's data in ISO string format
+ *               example: 2022-03-13T12:43:20.000Z
  *           required:
  *             - id
+ *             - createdAt
+ *             - updatedAt
  *         - $ref: '#/components/schemas/NewBird'
  *   parameters:
  *     birdIdParam:
@@ -79,35 +90,6 @@ const router = express.Router();
  *                     example: 'The request body is not a valid bird data'
  */
 
-let birdNumId = 1;
-
-const birds = [
-  {
-    id: birdNumId++ + '',
-    name: 'Eastern bluebird',
-    description:
-      'The eastern bluebird is a small North American migratory thrush found in open woodlands, farmlands, and orchards',
-  },
-  {
-    id: birdNumId++ + '',
-    name: 'Black-capped chickadee',
-    description:
-      'The black-capped chickadee is a small, nonmigratory, North American songbird that lives in deciduous and mixed forests',
-  },
-  {
-    id: birdNumId++ + '',
-    name: 'Yellow-rumped warbler',
-    description:
-      'The yellow-rumped warbler is a regular North American bird species that can be commonly observed all across the continent',
-  },
-  {
-    id: birdNumId++ + '',
-    name: 'House sparrow',
-    description:
-      'The house sparrow is a bird of the sparrow family Passeridae, found in most parts of the world.',
-  },
-];
-
 /**
  * @swagger
  * /birds:
@@ -115,7 +97,6 @@ const birds = [
  *    tags:
  *      - Birds
  *    summary: Retrieve a list of birds
- *    description: Retrieve the names and descriptions of birds
  *    responses:
  *      200:
  *        description: A list of birds
@@ -129,20 +110,15 @@ const birds = [
  *                  items:
  *                    $ref: '#/components/schemas/Bird'
  */
-router.get('/', (req, res) => {
-  res.send({
-    data: birds,
-  });
-});
+router.get('/', BirdsController.getBirds);
 
 /**
  * @swagger
- * /birds/{id}:
+ * /birds/{birdId}:
  *   get:
  *     tags:
  *       - Birds
  *     summary: Retrieve a single bird
- *     description: Retrieve the name and description of a single bird by its id
  *     parameters:
  *       - $ref: '#/components/parameters/birdIdParam'
  *     responses:
@@ -155,19 +131,7 @@ router.get('/', (req, res) => {
  *       404:
  *         $ref: '#/components/responses/NotFoundBird'
  */
-router.get('/:birdId', (req, res) => {
-  const { birdId } = req.params;
-
-  const bird = birds.find((bird) => bird.id === birdId);
-
-  if (!bird) {
-    return res.status(404).send('Bird not found');
-  }
-
-  res.send({
-    data: bird,
-  });
-});
+router.get('/:birdId', BirdsController.getBird);
 
 /**
  * @swagger
@@ -192,29 +156,11 @@ router.get('/:birdId', (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.post('/', (req, res) => {
-  const { name, description } = req.body;
-
-  if (!name || !description) {
-    return res.status(400).send('The posted bird data is invalid');
-  }
-
-  birds.push({
-    id: birdNumId++ + '',
-    name,
-    description,
-  });
-
-  const bird = birds[birds.length - 1];
-
-  res.status(200).send({
-    data: bird,
-  });
-});
+router.post('/', BirdsController.createBird);
 
 /**
  * @swagger
- * /birds/{id}:
+ * /birds/{birdId}:
  *   patch:
  *     tags:
  *       - Birds
@@ -228,6 +174,12 @@ router.post('/', (req, res) => {
  *         schema:
  *           type: string
  *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateBird'
  *     responses:
  *       200:
  *         description: A single bird data
@@ -240,32 +192,7 @@ router.post('/', (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.put('/:birdId', (req, res) => {
-  const { birdId } = req.params;
-  const { name, description } = req.body;
-
-  const birdIdx = birds.findIndex((bird) => bird.id === birdId);
-
-  if (birdIdx < 0) {
-    return res.status(404).send('Bird not found');
-  }
-
-  if (!name || !description) {
-    return res.status(400).send('The posted bird data is invalid');
-  }
-
-  const puttedBird = {
-    id: birdId,
-    name,
-    description,
-  };
-
-  birds[birdIdx] = puttedBird;
-
-  res.send({
-    data: puttedBird,
-  });
-});
+router.patch('/:birdId', BirdsController.updateBird);
 
 /**
  * @swagger
@@ -280,18 +207,6 @@ router.put('/:birdId', (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.delete('/:birdId', (req, res) => {
-  const { birdId } = req.params;
-
-  const birdIdx = birds.findIndex((bird) => bird.id === birdId);
-
-  if (birdIdx < 0) {
-    return res.status(404).send('Bird not found');
-  }
-
-  birds.splice(birdIdx, 1);
-
-  res.status(204).send();
-});
+router.delete('/:birdId', BirdsController.deleteBird);
 
 export default router;
