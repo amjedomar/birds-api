@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 
 /**
  * @swagger
@@ -255,7 +255,7 @@ router.put("/:birdId", (req, res) => {
   }
 
   const puttedBird = {
-    birdId,
+    id: birdId,
     name,
     description,
   };
@@ -294,5 +294,4 @@ router.delete("/:birdId", (req, res) => {
   res.status(204).send();
 });
 
-
-module.exports = router;
+export default router;

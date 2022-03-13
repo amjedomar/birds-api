@@ -1,8 +1,8 @@
-const path = require("path");
-const express = require("express");
-const birdsRouter = require("./routes/birds");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+import path from "path";
+import express from "express";
+import birdsRouter from "./routes/birds";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const { PORT = 4040 } = process.env;
 
@@ -15,11 +15,11 @@ const swaggerDefinition = {
     license: {
       name: "Licensed Under MIT",
       url: "https://github.com/amjedomar/birds-api/blob/main/LICENSE",
-    }
+    },
   },
   servers: [
     {
-      url: "http://localhost:4040",
+      url: `http://localhost:${PORT}`,
       description: "Dev server",
     },
   ],
