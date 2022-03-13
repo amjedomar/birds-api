@@ -1,0 +1,5 @@
+WAIT=10
+TIMEOUT=5
+ATTEMPTS=3
+
+/docs
