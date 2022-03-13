@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 
 /**
  * @swagger
@@ -83,28 +83,28 @@ let birdNumId = 1;
 
 const birds = [
   {
-    id: birdNumId++ + "",
-    name: "Eastern bluebird",
+    id: birdNumId++ + '',
+    name: 'Eastern bluebird',
     description:
-      "The eastern bluebird is a small North American migratory thrush found in open woodlands, farmlands, and orchards",
+      'The eastern bluebird is a small North American migratory thrush found in open woodlands, farmlands, and orchards',
   },
   {
-    id: birdNumId++ + "",
-    name: "Black-capped chickadee",
+    id: birdNumId++ + '',
+    name: 'Black-capped chickadee',
     description:
-      "The black-capped chickadee is a small, nonmigratory, North American songbird that lives in deciduous and mixed forests",
+      'The black-capped chickadee is a small, nonmigratory, North American songbird that lives in deciduous and mixed forests',
   },
   {
-    id: birdNumId++ + "",
-    name: "Yellow-rumped warbler",
+    id: birdNumId++ + '',
+    name: 'Yellow-rumped warbler',
     description:
-      "The yellow-rumped warbler is a regular North American bird species that can be commonly observed all across the continent",
+      'The yellow-rumped warbler is a regular North American bird species that can be commonly observed all across the continent',
   },
   {
-    id: birdNumId++ + "",
-    name: "House sparrow",
+    id: birdNumId++ + '',
+    name: 'House sparrow',
     description:
-      "The house sparrow is a bird of the sparrow family Passeridae, found in most parts of the world.",
+      'The house sparrow is a bird of the sparrow family Passeridae, found in most parts of the world.',
   },
 ];
 
@@ -129,7 +129,7 @@ const birds = [
  *                  items:
  *                    $ref: '#/components/schemas/Bird'
  */
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   res.send({
     data: birds,
   });
@@ -155,13 +155,13 @@ router.get("/", (req, res) => {
  *       404:
  *         $ref: '#/components/responses/NotFoundBird'
  */
-router.get("/:birdId", (req, res) => {
+router.get('/:birdId', (req, res) => {
   const { birdId } = req.params;
 
   const bird = birds.find((bird) => bird.id === birdId);
 
   if (!bird) {
-    return res.status(404).send("Bird not found");
+    return res.status(404).send('Bird not found');
   }
 
   res.send({
@@ -192,15 +192,15 @@ router.get("/:birdId", (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.post("/", (req, res) => {
+router.post('/', (req, res) => {
   const { name, description } = req.body;
 
   if (!name || !description) {
-    return res.status(400).send("The posted bird data is invalid");
+    return res.status(400).send('The posted bird data is invalid');
   }
 
   birds.push({
-    id: birdNumId++ + "",
+    id: birdNumId++ + '',
     name,
     description,
   });
@@ -240,18 +240,18 @@ router.post("/", (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.put("/:birdId", (req, res) => {
+router.put('/:birdId', (req, res) => {
   const { birdId } = req.params;
   const { name, description } = req.body;
 
   const birdIdx = birds.findIndex((bird) => bird.id === birdId);
 
   if (birdIdx < 0) {
-    return res.status(404).send("Bird not found");
+    return res.status(404).send('Bird not found');
   }
 
   if (!name || !description) {
-    return res.status(400).send("The posted bird data is invalid");
+    return res.status(400).send('The posted bird data is invalid');
   }
 
   const puttedBird = {
@@ -280,13 +280,13 @@ router.put("/:birdId", (req, res) => {
  *       400:
  *         $ref: '#/components/responses/InvalidBirdBody'
  */
-router.delete("/:birdId", (req, res) => {
+router.delete('/:birdId', (req, res) => {
   const { birdId } = req.params;
 
   const birdIdx = birds.findIndex((bird) => bird.id === birdId);
 
   if (birdIdx < 0) {
-    return res.status(404).send("Bird not found");
+    return res.status(404).send('Bird not found');
   }
 
   birds.splice(birdIdx, 1);
