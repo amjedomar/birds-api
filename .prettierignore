@@ -4,3 +4,6 @@
 
 # Dist
 /dist
+
+# Env
+/.env

@@ -9,8 +9,8 @@
 /.env
 
 # Dist
-dist
+/dist
 
 # Yarn Logs
-yarn-error.log
-yarn-debug.log
+yarn-error.log*
+yarn-debug.log*

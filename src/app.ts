@@ -10,21 +10,26 @@ import swaggerUi from 'swagger-ui-express';
 
 const { PORT = 4040, DEV_SERVER_URL } = process.env;
 
+// Configure Swagger Spec
 const swaggerDefinition: SwaggerDefinition = {
   openapi: '3.0.0',
   info: {
     title: 'Birds API',
     version: '1.0.0',
     description:
-      'A Public Restful API server based on Express.js, To retrieve and manipulate birds data',
+      'A Public Restful API server built using Express.js and documented via Swagger, To retrieve and manipulate birds data',
     license: {
       name: 'Licensed Under MIT',
       url: 'https://github.com/amjedomar/birds-api/blob/main/LICENSE',
     },
   },
+  externalDocs: {
+    description: 'Contribute to birds-api at GitHub',
+    url: 'https://github.com/amjedomar/birds-api',
+  },
   servers: [
     {
-      url: `http://localhost:${PORT}` ?? DEV_SERVER_URL,
+      url: DEV_SERVER_URL || `http://localhost:${PORT}`,
       description: 'Dev Server',
     },
   ],
@@ -37,6 +42,7 @@ const options: SwaggerOptions = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
+// Configure App
 const app = express();
 
 app.use(cors());
@@ -46,9 +52,12 @@ app.get('/', (req, res) => {
   res.redirect(301, '/docs');
 });
 
-app.use('/birds', birdsRouter);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Apply Routers
+app.use('/birds', birdsRouter);
+
+// Run App
 app.listen(PORT, () => {
   console.log(`The App is running on http://localhost:${PORT}`);
 });

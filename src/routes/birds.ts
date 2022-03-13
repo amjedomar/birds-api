@@ -1,13 +1,5 @@
 import express from 'express';
-import {BirdsController} from '../controllers/BirdsController';
-
-/**
- * @swagger
- *   tags:
- *     - name: Birds
- *       description: Operations to retrieve and manipulate birds data
- */
-const router = express.Router();
+import { BirdsController } from '../controllers/BirdsController';
 
 /**
  * @swagger
@@ -39,28 +31,22 @@ const router = express.Router();
  *               type: string
  *               description: The bird's Identifier
  *               example: 1
+ *           required:
+ *             - id
+ *         - $ref: '#/components/schemas/NewBird'
+ *         - type: object
+ *           properties:
  *             createdAt:
  *               type: string
- *               description: The date of the bird's creation in ISO string format
+ *               description: The bird's creation date in ISO string format
  *               example: 2022-03-13T12:17:10.000Z
  *             updatedAt:
  *               type: string
- *               description: The date of the last update operation to the bird's data in ISO string format
+ *               description: The date in ISO string format of the last update operation to the bird's data
  *               example: 2022-03-13T12:43:20.000Z
  *           required:
- *             - id
  *             - createdAt
  *             - updatedAt
- *         - $ref: '#/components/schemas/NewBird'
- *   parameters:
- *     birdIdParam:
- *       name: birdId
- *       in: path
- *       required: true
- *       description: The bird's identifier
- *       schema:
- *         type: string
- *         example: 1
  *   responses:
  *     NotFoundBird:
  *       description: Bird Not Found
@@ -74,9 +60,9 @@ const router = express.Router();
  *                 properties:
  *                   message:
  *                     type: string
- *                     example: 'The bird with the given id does not exists'
- *     InvalidBirdBody:
- *       description: Invalid Bird Data
+ *                     example: The bird with the given id does not exists
+ *     InvalidBirdPayload:
+ *       description: Invalid Bird Payload
  *       content:
  *         application/json:
  *           schema:
@@ -87,8 +73,16 @@ const router = express.Router();
  *                 properties:
  *                   message:
  *                     type: string
- *                     example: 'The request body is not a valid bird data'
+ *                     example: The request's body is invalid
  */
+
+/**
+ * @swagger
+ *   tags:
+ *     - name: Birds
+ *       description: Operations to retrieve and manipulate birds data
+ */
+const router = express.Router();
 
 /**
  * @swagger
@@ -120,7 +114,13 @@ router.get('/', BirdsController.getBirds);
  *       - Birds
  *     summary: Retrieve a single bird
  *     parameters:
- *       - $ref: '#/components/parameters/birdIdParam'
+ *       - name: birdId
+ *         in: path
+ *         required: true
+ *         description: The Id of a bird to get
+ *         schema:
+ *           type: string
+ *           example: 1
  *     responses:
  *       200:
  *         description: A single bird data
@@ -148,13 +148,13 @@ router.get('/:birdId', BirdsController.getBird);
  *             $ref: '#/components/schemas/NewBird'
  *     responses:
  *       201:
- *         description: Created
+ *         description: The Bird has been Created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Bird'
  *       400:
- *         $ref: '#/components/responses/InvalidBirdBody'
+ *         $ref: '#/components/responses/InvalidBirdPayload'
  */
 router.post('/', BirdsController.createBird);
 
@@ -170,7 +170,7 @@ router.post('/', BirdsController.createBird);
  *       - name: birdId
  *         in: path
  *         required: true
- *         description: The ID of bird to update
+ *         description: The ID of a bird to update
  *         schema:
  *           type: string
  *           example: 1
@@ -190,22 +190,30 @@ router.post('/', BirdsController.createBird);
  *       404:
  *         $ref: '#/components/responses/NotFoundBird'
  *       400:
- *         $ref: '#/components/responses/InvalidBirdBody'
+ *         $ref: '#/components/responses/InvalidBirdPayload'
  */
 router.patch('/:birdId', BirdsController.updateBird);
 
 /**
  * @swagger
- * /birds:
+ * /birds/{birdId}:
  *   delete:
  *     tags:
  *       - Birds
  *     summary: Delete an existing Bird.
+ *     parameters:
+ *       - name: birdId
+ *         in: path
+ *         required: true
+ *         description: The Id of a bird to delete
+ *         schema:
+ *           type: string
+ *           example: 1
  *     responses:
  *       204:
- *         description: Deleted
- *       400:
- *         $ref: '#/components/responses/InvalidBirdBody'
+ *         description: The Bird has been Deleted
+ *       404:
+ *         $ref: '#/components/responses/NotFoundBird'
  */
 router.delete('/:birdId', BirdsController.deleteBird);
 
