@@ -1,6 +1,6 @@
 # Birds API
 
-A Public Restful API server built using Express.js and documented via Swagger, To retrieve and manipulate birds data
+A Public Restful API server built using Express.js and documented using Swagger, To retrieve and manipulate birds data
 
 **Table of Contents**
 
@@ -70,7 +70,7 @@ yarn start
 ## Deploy `birds-api` to Dokku
 First Install Dokku in a cloud machine like Microsoft Azure, DigitalOcean, DreamHost Cloud, ...ect.
 
-After you installed and configured Dokku, follow the following steps:
+After you installed and configured Dokku, run the following commands in your cloud machine:
 
 ### App
 
@@ -140,7 +140,7 @@ dokku config:unset birds-api DATABASE_URL
 ```
 
 ### Setup Domain
-> NOTE: first make sure that you add a record to your DNS domain that point to the machine that dokku in
+> NOTE: first make sure that you add a record to your DNS domain that points to the machine that dokku in
 ```
 dokku domains:set birds-api <your domain>
 ```

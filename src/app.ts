@@ -17,7 +17,7 @@ const swaggerDefinition: SwaggerDefinition = {
     title: 'Birds API',
     version: '1.0.0',
     description:
-      'A Public Restful API server built using Express.js and documented via Swagger, To retrieve and manipulate birds data',
+      'A Public Restful API server built using Express.js and documented using Swagger, To retrieve and manipulate birds data',
     license: {
       name: 'Licensed Under MIT',
       url: 'https://github.com/amjedomar/birds-api/blob/main/LICENSE',
